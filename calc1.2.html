@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор миномёта</title>
+<style>
+  :root {
+    --bg-1: #1b2735;
+    --bg-2: #090a0f;
+    --card-bg: rgba(22, 28, 38, 0.95);
+    --card-border: #2c3644;
+    --text: #e6edf3;
+    --muted: #8b97a6;
+    --field-bg: #0e131a;
+    --field-border: #2c3644;
+    --input-bg: #151b24;
+    --input-border: #2c3644;
+    --input-text: #e6edf3;
+    --placeholder: #4a5563;
+    --btn-bg: #1e2733;
+    --btn-border: #2c3644;
+    --btn-hover-bg: #26313f;
+    --btn-hover-border: #3a4a5e;
+    --result-bg: #0e131a;
+    --result-border: #2c3644;
+    --steps-border: #232c38;
+    --steps-text: #7d8b9c;
+    --shadow: 0 20px 50px rgba(0,0,0,0.6);
+    --toggle-bg: #1e2733;
+    --toggle-border: #2c3644;
+    --toggle-hover: #26313f;
+    --title-color: #e6edf3;
+    --help-bg: #0e131a;
+    --help-border: #2c3644;
+    --help-accent: #4a9eff;
+    --help-code-bg: #151b24;
+    --help-code-text: #8fd3ff;
+    --hist-item-bg: #151b24;
+    --hist-item-hover: #1c2530;
+    --hist-item-border: #232c38;
+  }
+
+  body.light {
+    --bg-1: #e8edf3;
+    --bg-2: #cfd8e3;
+    --card-bg: #ffffff;
+    --card-border: #d8e0ea;
+    --text: #1b2735;
+    --muted: #5a6878;
+    --field-bg: #f4f7fb;
+    --field-border: #d8e0ea;
+    --input-bg: #ffffff;
+    --input-border: #d8e0ea;
+    --input-text: #1b2735;
+    --placeholder: #9aa5b5;
+    --btn-bg: #eef2f7;
+    --btn-border: #d8e0ea;
+    --btn-hover-bg: #e2e8f0;
+    --btn-hover-border: #b8c2d0;
+    --result-bg: #f4f7fb;
+    --result-border: #d8e0ea;
+    --steps-border: #e0e6ee;
+    --steps-text: #5a6878;
+    --shadow: 0 20px 40px rgba(30,50,80,0.12);
+    --toggle-bg: #eef2f7;
+    --toggle-border: #d8e0ea;
+    --toggle-hover: #e2e8f0;
+    --title-color: #1b2735;
+    --help-bg: #f4f7fb;
+    --help-border: #d8e0ea;
+    --help-accent: #2b6fd6;
+    --help-code-bg: #eaf1fb;
+    --help-code-text: #1d4ed8;
+    --hist-item-bg: #f4f7fb;
+    --hist-item-hover: #eaf0f8;
+    --hist-item-border: #e0e6ee;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: radial-gradient(circle at top, var(--bg-1) 0%, var(--bg-2) 100%);
+    color: var(--text);
+    padding: 20px;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+
+  .layout {
+    position: relative;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px 22px 28px;
+    box-shadow: var(--shadow);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    flex: 1;
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.3px;
+    color: var(--title-color);
+    transition: color 0.35s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .icon-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    border-radius: 50%;
+    color: var(--text);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s, color 0.2s;
+    user-select: none;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .icon-btn:hover { background: var(--toggle-hover); }
+  .icon-btn:active { transform: scale(0.92); }
+
+  .theme-toggle { font-size: 17px; }
+  .help-btn { font-weight: 700; font-size: 15px; }
+  .hist-btn { font-size: 16px; }
+
+  .help-btn:hover,
+  .help-btn.active {
+    color: var(--help-accent);
+    border-color: var(--help-accent);
+  }
+
+  .hist-btn:hover,
+  .hist-btn.active {
+    color: var(--help-accent);
+    border-color: var(--help-accent);
+  }
+
+  /* === Панель подсказки (слева) === */
+  .help-panel {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    margin-right: 16px;
+    width: 340px;
+    opacity: 0;
+    transform: translateX(24px);
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.35s ease;
+  }
+
+  .layout.help-open .help-panel {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .help-inner {
+    width: 100%;
+    padding: 18px 20px 20px;
+    background: var(--help-bg);
+    border: 1px solid var(--help-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+
+  .help-inner h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--help-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .help-inner h3:not(:first-child) { margin-top: 16px; }
+
+  .help-inner p {
+    margin: 0 0 10px;
+    color: var(--muted);
+  }
+
+  .help-inner ol {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+  }
+
+  .help-inner ol li { margin-bottom: 6px; }
+
+  .help-inner ol li b { color: var(--text); font-weight: 600; }
+
+  .help-inner code {
+    display: inline-block;
+    padding: 1px 6px;
+    background: var(--help-code-bg);
+    color: var(--help-code-text);
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.3px;
+  }
+
+  .help-inner .tip {
+    margin-top: 14px;
+    padding: 10px 12px;
+    background: var(--help-code-bg);
+    border-radius: 8px;
+    border-left: 3px solid var(--help-accent);
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .help-inner .tip + .tip { margin-top: 8px; }
+
+  .help-inner .tip b { color: var(--text); }
+
+  /* === Панель истории (справа) === */
+  .history-panel {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 16px;
+    width: 340px;
+    opacity: 0;
+    transform: translateX(-24px);
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.35s ease;
+  }
+
+  .layout.history-open .history-panel {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .hist-inner {
+    width: 100%;
+    padding: 18px 18px 16px;
+    background: var(--help-bg);
+    border: 1px solid var(--help-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--text);
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+
+  .hist-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .hist-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--help-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .hist-clear {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--hist-item-border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+
+  .hist-clear:hover {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+  }
+
+  body.light .hist-clear:hover {
+    color: #dc2626;
+    border-color: #dc2626;
+  }
+
+  .hist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-right: -6px;
+    padding-right: 6px;
+  }
+
+  .hist-list::-webkit-scrollbar { width: 6px; }
+  .hist-list::-webkit-scrollbar-track { background: transparent; }
+  .hist-list::-webkit-scrollbar-thumb {
+    background: var(--hist-item-border);
+    border-radius: 3px;
+  }
+
+  .hist-item {
+    background: var(--hist-item-bg);
+    border: 1px solid var(--hist-item-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+
+  .hist-item:hover {
+    background: var(--hist-item-hover);
+    border-color: var(--help-accent);
+  }
+
+  .hist-item:active { transform: scale(0.99); }
+
+  .hist-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .hist-meters {
+    font-size: 20px;
+    font-weight: 700;
+    color: #4ade80;
+    font-family: 'Consolas', monospace;
+    line-height: 1.1;
+  }
+
+  body.light .hist-meters { color: #16a34a; }
+
+  .hist-meters .unit {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-left: 2px;
+  }
+
+  .hist-time {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Consolas', monospace;
+    flex-shrink: 0;
+  }
+
+  .hist-coords {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-family: 'Consolas', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hist-coords .sep { opacity: 0.5; margin: 0 4px; }
+
+  .hist-empty {
+    text-align: center;
+    padding: 24px 8px;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Поля */
+  .field {
+    margin-bottom: 12px;
+    padding: 12px 14px 14px;
+    border-radius: 12px;
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+
+  .field.player { border-left: 3px solid #4ade80; }
+  .field.enemy  { border-left: 3px solid #ff6b6b; }
+
+  .field-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .player .dot { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+  .enemy  .dot { background: #ff6b6b; box-shadow: 0 0 8px #ff6b6b; }
+
+  .field-title { font-size: 13px; font-weight: 600; letter-spacing: 0.4px; }
+  .player .field-title { color: #16a34a; }
+  .enemy  .field-title { color: #dc2626; }
+
+  body:not(.light) .player .field-title { color: #4ade80; }
+  body:not(.light) .enemy  .field-title { color: #ff6b6b; }
+
+  .field-hint { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  .field input {
+    width: 100%;
+    padding: 11px 13px;
+    font-size: 15px;
+    font-family: 'Consolas', monospace;
+    color: var(--input-text);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.35s, color 0.35s;
+    letter-spacing: 0.5px;
+  }
+
+  .field input:focus {
+    border-color: #4a9eff;
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+  }
+
+  .field input::placeholder { color: var(--placeholder); }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 12px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s, color 0.35s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn:hover { background: var(--btn-hover-bg); border-color: var(--btn-hover-border); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn .icon { font-size: 15px; line-height: 1; }
+
+  .result {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background: var(--result-bg);
+    border: 1px solid var(--result-border);
+    text-align: center;
+    display: none;
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+
+  .result.show { display: block; }
+
+  .result .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .result .value {
+    font-size: 40px;
+    font-weight: 700;
+    color: #4ade80;
+    font-family: 'Consolas', monospace;
+    line-height: 1;
+  }
+
+  body.light .result .value { color: #16a34a; }
+
+  .result .value .unit {
+    font-size: 22px;
+    opacity: 0.7;
+    margin-left: 4px;
+  }
+
+  .result .steps {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--steps-text);
+    font-family: 'Consolas', monospace;
+    text-align: left;
+    line-height: 1.6;
+    border-top: 1px solid var(--steps-border);
+    padding-top: 12px;
+    white-space: pre-line;
+    transition: color 0.35s, border-color 0.35s;
+  }
+
+  .error {
+    color: #ff6b6b !important;
+    font-size: 15px !important;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.5 !important;
+    text-align: left !important;
+  }
+
+  body.light .error { color: #dc2626 !important; }
+
+  .error .example {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    color: #ffb3b3;
+    font-weight: 500;
+  }
+
+  body.light .error .example { color: #b91c1c; }
+
+  .warning {
+    color: #ffb84d !important;
+    font-size: 16px !important;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.5 !important;
+    text-align: center !important;
+  }
+
+  body.light .warning { color: #b45309 !important; }
+
+  .warning .sub {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b8a070;
+  }
+
+  body.light .warning .sub { color: #92400e; }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #2b6fd6;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 1280px) {
+    .help-panel,
+    .history-panel {
+      position: fixed;
+      inset: 0;
+      right: auto;
+      left: auto;
+      margin: 0;
+      width: auto;
+      max-width: none;
+      opacity: 0;
+      transform: none;
+      pointer-events: none;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(6, 10, 16, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: opacity 0.22s ease;
+    }
+
+    body.light .help-panel,
+    body.light .history-panel { background: rgba(40, 60, 90, 0.35); }
+
+    .help-panel.open,
+    .history-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .help-inner,
+    .hist-inner {
+      width: 100%;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .hist-list { max-height: 60vh; }
+
+    h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout" id="layout">
+
+  <div class="card">
+    <div class="card-head">
+      <button class="icon-btn help-btn" id="helpToggle" title="Как пользоваться?">?</button>
+      <h1>🎯 Калькулятор миномёта</h1>
+      <button class="icon-btn hist-btn" id="histToggle" title="История расчётов">🕘</button>
+      <button class="icon-btn theme-toggle" id="themeToggle" title="Сменить тему">🌙</button>
+    </div>
+
+    <div class="field player">
+      <div class="field-head">
+        <div class="dot"></div>
+        <div class="field-title">A — моя позиция (игрок)</div>
+        <div class="field-hint">откуда</div>
+      </div>
+      <input id="a" type="text" placeholder="x104.44, y63.52" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="field enemy">
+      <div class="field-head">
+        <div class="dot"></div>
+        <div class="field-title">B — позиция врага</div>
+        <div class="field-hint">куда</div>
+      </div>
+      <input id="b" type="text" placeholder="x100.35, y58.98" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="clearBtn" title="Очистить поля">
+        <span class="icon">🗑</span> Очистить
+      </button>
+    </div>
+
+    <div class="result" id="result">
+      <div class="label">Дистанция</div>
+      <div class="value" id="value">0<span class="unit">м</span></div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </div>
+
+  <aside class="help-panel" id="helpPanel">
+    <div class="help-inner">
+      <h3>Формат ввода</h3>
+      <p>Введи координаты в формате <code>x104.44, y63.52</code> — как показывается в игре.</p>
+
+      <h3>Как считать</h3>
+      <ol>
+        <li><b>Поле A</b> — координаты, где стоишь ты (твоя позиция).</li>
+        <li><b>Поле B</b> — координаты врага (куда стрелять).</li>
+        <li>Результат в <b>метрах</b> появится сам, как только введёшь обе точки.</li>
+      </ol>
+
+      <div class="tip">
+        <b>Совет:</b> можно вставить сразу обе точки одной строкой
+        (<code>x104.44, y63.52 x100.35, y58.98</code>) в любое поле — калькулятор сам разобьёт их на A и B.
+      </div>
+
+      <div class="tip">
+        <b>Ctrl+A</b> — быстро выделить координаты, как только они появятся в игровом чате.
+      </div>
+    </div>
+  </aside>
+
+  <aside class="history-panel" id="historyPanel">
+    <div class="hist-inner">
+      <div class="hist-head">
+        <div class="hist-title">История</div>
+        <button class="hist-clear" id="histClear">Очистить</button>
+      </div>
+      <div class="hist-list" id="histList">
+        <div class="hist-empty">Пока пусто — посчитай что-нибудь</div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const METERS_PER_UNIT = 100;
+const EXAMPLE = 'x100.34, y59.44';
+const HISTORY_LIMIT = 10;
+
+const $ = (id) => document.getElementById(id);
+const inputA = $('a');
+const inputB = $('b');
+const layout = $('layout');
+const helpPanel = $('helpPanel');
+const helpToggle = $('helpToggle');
+const historyPanel = $('historyPanel');
+const histToggle = $('histToggle');
+const histList = $('histList');
+
+// ============ Тема ============
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.body.classList.add('light');
+    $('themeToggle').textContent = '☀️';
+    $('themeToggle').title = 'Включить тёмную тему';
+  } else {
+    document.body.classList.remove('light');
+    $('themeToggle').textContent = '🌙';
+    $('themeToggle').title = 'Включить светлую тему';
+  }
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light');
+  const next = isLight ? 'dark' : 'light';
+  applyTheme(next);
+  try { localStorage.setItem('mortar-theme', next); } catch (e) {}
+}
+
+(function initTheme() {
+  let saved = 'dark';
+  try { saved = localStorage.getItem('mortar-theme') || 'dark'; } catch (e) {}
+  applyTheme(saved);
+})();
+
+// ============ Панели ============
+function setHelp(open) {
+  layout.classList.toggle('help-open', open);
+  helpPanel.classList.toggle('open', open);
+  helpToggle.classList.toggle('active', open);
+  try { localStorage.setItem('mortar-help', open ? 'open' : 'closed'); } catch (e) {}
+}
+
+function setHistory(open) {
+  layout.classList.toggle('history-open', open);
+  historyPanel.classList.toggle('open', open);
+  histToggle.classList.toggle('active', open);
+  try { localStorage.setItem('mortar-history', open ? 'open' : 'closed'); } catch (e) {}
+}
+
+function toggleHelp(e) {
+  if (e) e.stopPropagation();
+  const open = !layout.classList.contains('help-open');
+  if (open && window.matchMedia('(max-width: 1280px)').matches) setHistory(false);
+  setHelp(open);
+}
+
+function toggleHistory(e) {
+  if (e) e.stopPropagation();
+  const open = !layout.classList.contains('history-open');
+  if (open && window.matchMedia('(max-width: 1280px)').matches) setHelp(false);
+  setHistory(open);
+}
+
+(function initPanels() {
+  let savedHelp = 'closed';
+  let savedHist = 'closed';
+  try { savedHelp = localStorage.getItem('mortar-help') || 'closed'; } catch (e) {}
+  try { savedHist = localStorage.getItem('mortar-history') || 'closed'; } catch (e) {}
+
+  if (window.matchMedia('(max-width: 1280px)').matches) {
+    if (savedHelp === 'open') { setHelp(true); setHistory(false); }
+    else if (savedHist === 'open') { setHistory(true); setHelp(false); }
+  } else {
+    if (savedHelp === 'open') setHelp(true);
+    if (savedHist === 'open') setHistory(true);
+  }
+})();
+
+document.addEventListener('click', (e) => {
+  const isNarrow = window.matchMedia('(max-width: 1280px)').matches;
+  if (isNarrow) return;
+
+  if (layout.classList.contains('help-open') &&
+      !helpPanel.contains(e.target) &&
+      !helpToggle.contains(e.target) &&
+      !e.target.closest('.card')) {
+    setHelp(false);
+  }
+  if (layout.classList.contains('history-open') &&
+      !historyPanel.contains(e.target) &&
+      !histToggle.contains(e.target) &&
+      !e.target.closest('.card')) {
+    setHistory(false);
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { setHelp(false); setHistory(false); }
+});
+
+// ============ История ============
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem('mortar-history-list');
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+
+function saveHistory(list) {
+  try { localStorage.setItem('mortar-history-list', JSON.stringify(list)); } catch (e) {}
+}
+
+let history = loadHistory();
+
+function formatTime(ts) {
+  const d = new Date(ts);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function renderHistory() {
+  if (!history.length) {
+    histList.innerHTML = '<div class="hist-empty">Пока пусто — посчитай что-нибудь</div>';
+    return;
+  }
+
+  histList.innerHTML = history.map((item, idx) => `
+    <div class="hist-item" data-idx="${idx}">
+      <div class="hist-row">
+        <div class="hist-meters">${item.meters.toFixed(0)}<span class="unit">м</span></div>
+        <div class="hist-time">${formatTime(item.time)}</div>
+      </div>
+      <div class="hist-coords">
+        x${item.ax}, y${item.ay}<span class="sep">→</span>x${item.bx}, y${item.by}
+      </div>
+    </div>
+  `).join('');
+}
+
+function pushHistory(ax, ay, bx, by, meters) {
+  if (history.length) {
+    const last = history[0];
+    if (last.ax === ax && last.ay === ay && last.bx === bx && last.by === by) {
+      last.meters = meters;
+      last.time = Date.now();
+      saveHistory(history);
+      renderHistory();
+      return;
+    }
+  }
+
+  history.unshift({ ax, ay, bx, by, meters, time: Date.now() });
+  if (history.length > HISTORY_LIMIT) history = history.slice(0, HISTORY_LIMIT);
+
+  saveHistory(history);
+  renderHistory();
+}
+
+histList.addEventListener('click', (e) => {
+  const el = e.target.closest('.hist-item');
+  if (!el) return;
+  const idx = parseInt(el.dataset.idx, 10);
+  const item = history[idx];
+  if (!item) return;
+
+  inputA.value = `x${item.ax}, y${item.ay}`;
+  inputB.value = `x${item.bx}, y${item.by}`;
+  calculate();
+  showToast('Координаты восстановлены');
+});
+
+$('histClear').addEventListener('click', () => {
+  history = [];
+  saveHistory(history);
+  renderHistory();
+  showToast('История очищена');
+});
+
+// ============ Парсинг ============
+function parseCoord(str) {
+  if (!str) return null;
+  const m = String(str).match(
+    /x\s*(-?\d+(?:[.,]\d+)?)\s*[,;]?\s*y\s*(-?\d+(?:[.,]\d+)?)/i
+  );
+  if (!m) return null;
+  return {
+    x: parseFloat(m[1].replace(',', '.')),
+    y: parseFloat(m[2].replace(',', '.'))
+  };
+}
+
+function parseAllCoords(str) {
+  if (!str) return [];
+  const re = /x\s*(-?\d+(?:[.,]\d+)?)\s*[,;]?\s*y\s*(-?\d+(?:[.,]\d+)?)/gi;
+  const out = [];
+  let m;
+  while ((m = re.exec(str)) !== null) {
+    out.push({
+      x: parseFloat(m[1].replace(',', '.')),
+      y: parseFloat(m[2].replace(',', '.'))
+    });
+  }
+  return out;
+}
+
+// ============ UI helpers ============
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+function showError(html) {
+  const resultBox = $('result');
+  const valueEl = $('value');
+  $('steps').textContent = '';
+  valueEl.classList.remove('warning');
+  valueEl.classList.add('error');
+  valueEl.innerHTML = html;
+  resultBox.classList.add('show');
+}
+
+function showWarning(html) {
+  const resultBox = $('result');
+  const valueEl = $('value');
+  $('steps').textContent = '';
+  valueEl.classList.remove('error');
+  valueEl.classList.add('warning');
+  valueEl.innerHTML = html;
+  resultBox.classList.add('show');
+}
+
+function clearResult() {
+  $('result').classList.remove('show');
+  $('value').classList.remove('error');
+  $('value').classList.remove('warning');
+  $('value').innerHTML = '';
+  $('steps').textContent = '';
+}
+
+function errorLine(kind, label, raw, parsed) {
+  if (!raw) return `• Не введена ${label}`;
+  if (!parsed) return `• ${kind} — неверный формат, пример: <span class="example">${EXAMPLE}</span>`;
+  return null;
+}
+
+// ============ Расчёт ============
+function calculate() {
+  const rawA = inputA.value.trim();
+  const rawB = inputB.value.trim();
+  const A = parseCoord(rawA);
+  const B = parseCoord(rawB);
+
+  if (!rawA && !rawB) { clearResult(); return; }
+
+  const errA = errorLine('A', 'позиция игрока', rawA, A);
+  const errB = errorLine('B', 'позиция врага', rawB, B);
+
+  if (errA || errB) {
+    const lines = [];
+    if (errA) lines.push(errA);
+    if (errB) lines.push(errB);
+    return showError(lines.join('<br>'));
+  }
+
+  if (A.x === B.x && A.y === B.y) {
+    return showWarning(
+      '⚠ A и B совпадают' +
+      '<span class="sub">Это одна и та же точка — дистанция 0 м</span>'
+    );
+  }
+
+  const dx = A.x - B.x;
+  const dy = A.y - B.y;
+  const dx2 = dx * dx;
+  const dy2 = dy * dy;
+  const sum = dx2 + dy2;
+  const distanceUnits = Math.sqrt(sum);
+  const meters = distanceUnits * METERS_PER_UNIT;
+
+  $('value').classList.remove('error');
+  $('value').classList.remove('warning');
+  $('value').innerHTML = `${meters.toFixed(0)}<span class="unit">м</span>`;
+
+  $('steps').textContent =
+    `A = x${A.x}, y${A.y}\n` +
+    `B = x${B.x}, y${B.y}\n\n` +
+    `dx = ${A.x} − ${B.x} = ${dx.toFixed(2)}\n` +
+    `dx² = ${dx2.toFixed(4)}\n` +
+    `dy = ${A.y} − ${B.y} = ${dy.toFixed(2)}\n` +
+    `dy² = ${dy2.toFixed(4)}\n\n` +
+    `√(${dx2.toFixed(4)} + ${dy2.toFixed(4)}) = ${distanceUnits.toFixed(4)} ед.\n` +
+    `${distanceUnits.toFixed(4)} × ${METERS_PER_UNIT} = ${meters.toFixed(2)} м`;
+
+  $('result').classList.add('show');
+
+  pushHistory(A.x, A.y, B.x, B.y, meters);
+}
+
+let autoTimer = null;
+function scheduleCalc() {
+  clearTimeout(autoTimer);
+  autoTimer = setTimeout(calculate, 300);
+}
+
+function handlePasteSplit(e) {
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  if (!text) return;
+  const coords = parseAllCoords(text);
+
+  if (coords.length >= 2) {
+    e.preventDefault();
+    inputA.value = `x${coords[0].x}, y${coords[0].y}`;
+    inputB.value = `x${coords[1].x}, y${coords[1].y}`;
+    calculate();
+    showToast('Обе точки вставлены');
+  }
+}
+
+function clearAll() {
+  inputA.value = '';
+  inputB.value = '';
+  clearResult();
+  inputA.focus();
+}
+
+// ============ События ============
+$('themeToggle').addEventListener('click', toggleTheme);
+helpToggle.addEventListener('click', toggleHelp);
+histToggle.addEventListener('click', toggleHistory);
+
+inputA.addEventListener('input', scheduleCalc);
+inputB.addEventListener('input', scheduleCalc);
+
+inputA.addEventListener('paste', handlePasteSplit);
+inputB.addEventListener('paste', handlePasteSplit);
+
+inputA.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') calculate();
+});
+inputB.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') calculate();
+});
+
+$('clearBtn').addEventListener('click', clearAll);
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); calculate(); }
+});
+
+renderHistory();
+</script>
+
+</body>
+</html>
