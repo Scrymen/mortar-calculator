@@ -470,17 +470,28 @@
     border: 1px solid var(--btn-border);
     border-radius: 10px;
     cursor: pointer;
-    transition: background 0.15s, transform 0.1s, border-color 0.15s, color 0.35s;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s, color 0.35s, box-shadow 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+    font-family: 'Segoe UI', Arial, sans-serif;
   }
 
   .btn:hover { background: var(--btn-hover-bg); border-color: var(--btn-hover-border); }
   .btn:active { transform: scale(0.97); }
 
   .btn .icon { font-size: 15px; line-height: 1; }
+
+  .btn.primary {
+    color: #fff;
+    background: linear-gradient(135deg, #4a9eff, #2b6fd6);
+    border: none;
+  }
+
+  .btn.primary:hover { box-shadow: 0 6px 20px rgba(74, 158, 255, 0.35); }
+
+  .btn.primary .icon { font-size: 16px; }
 
   .result {
     margin-top: 20px;
@@ -675,6 +686,9 @@
     </div>
 
     <div class="btn-row">
+      <button class="btn primary" id="calcBtn" title="Рассчитать расстояние">
+        <span class="icon">🎯</span> Рассчитать
+      </button>
       <button class="btn" id="clearBtn" title="Очистить поля">
         <span class="icon">🗑</span> Очистить
       </button>
@@ -1082,6 +1096,7 @@ inputB.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') calculate();
 });
 
+$('calcBtn').addEventListener('click', calculate);
 $('clearBtn').addEventListener('click', clearAll);
 
 document.addEventListener('keydown', (e) => {
