@@ -39,6 +39,7 @@
     --hist-item-bg: #151b24;
     --hist-item-hover: #1c2530;
     --hist-item-border: #232c38;
+    --azimuth-color: #4a9eff;
   }
 
   body.light {
@@ -75,6 +76,7 @@
     --hist-item-bg: #f4f7fb;
     --hist-item-hover: #eaf0f8;
     --hist-item-border: #e0e6ee;
+    --azimuth-color: #2b6fd6;
   }
 
   * { box-sizing: border-box; }
@@ -93,9 +95,7 @@
     transition: background 0.35s ease, color 0.35s ease;
   }
 
-  .layout {
-    position: relative;
-  }
+  .layout { position: relative; }
 
   .card {
     width: 100%;
@@ -153,30 +153,12 @@
   .theme-toggle { font-size: 16px; }
   .help-btn { font-weight: 700; font-size: 14px; }
   .hist-btn { font-size: 15px; }
-  .lang-btn {
-    font-weight: 700;
-    font-size: 10.5px;
-    letter-spacing: 0.5px;
-  }
+  .lang-btn { font-weight: 700; font-size: 10.5px; letter-spacing: 0.5px; }
 
-  .help-btn:hover,
-  .help-btn.active {
-    color: var(--help-accent);
-    border-color: var(--help-accent);
-  }
+  .help-btn:hover, .help-btn.active { color: var(--help-accent); border-color: var(--help-accent); }
+  .hist-btn:hover, .hist-btn.active { color: var(--help-accent); border-color: var(--help-accent); }
+  .lang-btn:hover { color: var(--help-accent); border-color: var(--help-accent); }
 
-  .hist-btn:hover,
-  .hist-btn.active {
-    color: var(--help-accent);
-    border-color: var(--help-accent);
-  }
-
-  .lang-btn:hover {
-    color: var(--help-accent);
-    border-color: var(--help-accent);
-  }
-
-  /* === Панель подсказки (слева) === */
   .help-panel {
     position: absolute;
     top: 0;
@@ -218,20 +200,9 @@
   }
 
   .help-inner h3:not(:first-child) { margin-top: 16px; }
-
-  .help-inner p {
-    margin: 0 0 10px;
-    color: var(--muted);
-  }
-
-  .help-inner ol {
-    margin: 0;
-    padding-left: 20px;
-    color: var(--muted);
-  }
-
+  .help-inner p { margin: 0 0 10px; color: var(--muted); }
+  .help-inner ol { margin: 0; padding-left: 20px; color: var(--muted); }
   .help-inner ol li { margin-bottom: 6px; }
-
   .help-inner ol li b { color: var(--text); font-weight: 600; }
 
   .help-inner code {
@@ -256,10 +227,8 @@
   }
 
   .help-inner .tip + .tip { margin-top: 8px; }
-
   .help-inner .tip b { color: var(--text); }
 
-  /* === Панель истории (справа) === */
   .history-panel {
     position: absolute;
     top: 0;
@@ -318,15 +287,8 @@
     font-family: inherit;
   }
 
-  .hist-clear:hover {
-    color: #ff6b6b;
-    border-color: #ff6b6b;
-  }
-
-  body.light .hist-clear:hover {
-    color: #dc2626;
-    border-color: #dc2626;
-  }
+  .hist-clear:hover { color: #ff6b6b; border-color: #ff6b6b; }
+  body.light .hist-clear:hover { color: #dc2626; border-color: #dc2626; }
 
   .hist-list {
     display: flex;
@@ -340,10 +302,7 @@
 
   .hist-list::-webkit-scrollbar { width: 6px; }
   .hist-list::-webkit-scrollbar-track { background: transparent; }
-  .hist-list::-webkit-scrollbar-thumb {
-    background: var(--hist-item-border);
-    border-radius: 3px;
-  }
+  .hist-list::-webkit-scrollbar-thumb { background: var(--hist-item-border); border-radius: 3px; }
 
   .hist-item {
     background: var(--hist-item-bg);
@@ -354,11 +313,7 @@
     transition: background 0.15s, border-color 0.15s, transform 0.1s;
   }
 
-  .hist-item:hover {
-    background: var(--hist-item-hover);
-    border-color: var(--help-accent);
-  }
-
+  .hist-item:hover { background: var(--hist-item-hover); border-color: var(--help-accent); }
   .hist-item:active { transform: scale(0.99); }
 
   .hist-row {
@@ -379,11 +334,8 @@
 
   body.light .hist-meters { color: #16a34a; }
 
-  .hist-meters .unit {
-    font-size: 13px;
-    opacity: 0.75;
-    margin-left: 2px;
-  }
+  .hist-meters .unit { font-size: 13px; opacity: 0.75; margin-left: 2px; }
+  .hist-meters .az { color: var(--azimuth-color); margin-left: 6px; font-size: 14px; }
 
   .hist-time {
     font-size: 11px;
@@ -411,7 +363,6 @@
     font-style: italic;
   }
 
-  /* Поля */
   .field {
     margin-bottom: 12px;
     padding: 12px 14px 14px;
@@ -501,12 +452,11 @@
   }
 
   .btn.primary:hover { box-shadow: 0 6px 20px rgba(74, 158, 255, 0.35); }
-
   .btn.primary .icon { font-size: 16px; }
 
   .result {
     margin-top: 20px;
-    padding: 18px;
+    padding: 18px 14px 16px;
     border-radius: 12px;
     background: var(--result-bg);
     border: 1px solid var(--result-border);
@@ -517,32 +467,57 @@
 
   .result.show { display: block; }
 
+  .dual {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .dual-block {
+    flex: 1;
+    min-width: 0;
+    padding: 0 6px;
+  }
+
+  .dual-divider {
+    width: 1px;
+    background: var(--steps-border);
+    margin: 4px 0;
+    flex-shrink: 0;
+    transition: background 0.35s ease;
+  }
+
   .result .label {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.3px;
     color: var(--muted);
     margin-bottom: 8px;
+    /* Никаких визуальных намёков, что кликабельно */
+    user-select: none;
   }
 
   .result .value {
-    font-size: 40px;
+    font-size: 36px;
     font-weight: 700;
     color: #4ade80;
     font-family: 'Consolas', monospace;
     line-height: 1;
+    white-space: nowrap;
   }
 
   body.light .result .value { color: #16a34a; }
 
+  .result .value.azimuth { color: var(--azimuth-color); }
+
   .result .value .unit {
-    font-size: 22px;
+    font-size: 20px;
     opacity: 0.7;
-    margin-left: 4px;
+    margin-left: 2px;
   }
 
-  .result .steps {
-    margin-top: 14px;
+  .steps {
+    margin-top: 16px;
     font-size: 12.5px;
     color: var(--steps-text);
     font-family: 'Consolas', monospace;
@@ -552,20 +527,27 @@
     padding-top: 12px;
     white-space: pre-line;
     transition: color 0.35s, border-color 0.35s;
+    display: none;
   }
 
-  .error {
-    color: #ff6b6b !important;
-    font-size: 15px !important;
+  .steps.show { display: block; }
+
+  .error-box {
+    text-align: left;
+    padding: 4px 2px;
+  }
+
+  .error-box.error {
+    color: #ff6b6b;
+    font-size: 15px;
     font-weight: 600;
     font-family: 'Segoe UI', sans-serif;
-    line-height: 1.5 !important;
-    text-align: left !important;
+    line-height: 1.5;
   }
 
-  body.light .error { color: #dc2626 !important; }
+  body.light .error-box.error { color: #dc2626; }
 
-  .error .example {
+  .error-box.error .example {
     display: inline-block;
     margin-top: 4px;
     font-family: 'Consolas', monospace;
@@ -574,20 +556,20 @@
     font-weight: 500;
   }
 
-  body.light .error .example { color: #b91c1c; }
+  body.light .error-box.error .example { color: #b91c1c; }
 
-  .warning {
-    color: #ffb84d !important;
-    font-size: 16px !important;
+  .error-box.warning {
+    color: #ffb84d;
+    font-size: 16px;
     font-weight: 600;
     font-family: 'Segoe UI', sans-serif;
-    line-height: 1.5 !important;
-    text-align: center !important;
+    line-height: 1.5;
+    text-align: center;
   }
 
-  body.light .warning { color: #b45309 !important; }
+  body.light .error-box.warning { color: #b45309; }
 
-  .warning .sub {
+  .error-box.warning .sub {
     display: block;
     margin-top: 6px;
     font-size: 13px;
@@ -595,7 +577,7 @@
     color: #b8a070;
   }
 
-  body.light .warning .sub { color: #92400e; }
+  body.light .error-box.warning .sub { color: #92400e; }
 
   .toast {
     position: fixed;
@@ -647,10 +629,7 @@
     body.light .history-panel { background: rgba(40, 60, 90, 0.35); }
 
     .help-panel.open,
-    .history-panel.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .history-panel.open { opacity: 1; pointer-events: auto; }
 
     .help-inner,
     .hist-inner {
@@ -661,8 +640,12 @@
     }
 
     .hist-list { max-height: 60vh; }
-
     h1 { font-size: 17px; }
+  }
+
+  @media (max-width: 420px) {
+    .result .value { font-size: 28px; }
+    .result .value .unit { font-size: 16px; }
   }
 </style>
 </head>
@@ -707,8 +690,18 @@
     </div>
 
     <div class="result" id="result">
-      <div class="label" id="resultLabel">Дистанция</div>
-      <div class="value" id="value">0<span class="unit">м</span></div>
+      <div class="dual" id="dual">
+        <div class="dual-block">
+          <div class="label" id="labelDistance">Дистанция</div>
+          <div class="value" id="valueMeters">0<span class="unit">м</span></div>
+        </div>
+        <div class="dual-divider"></div>
+        <div class="dual-block">
+          <div class="label" id="labelAzimuth">Азимут</div>
+          <div class="value azimuth" id="valueAzimuth">0<span class="unit">°</span></div>
+        </div>
+      </div>
+      <div class="error-box" id="errorBox" style="display:none;"></div>
       <div class="steps" id="steps"></div>
     </div>
   </div>
@@ -717,14 +710,12 @@
     <div class="help-inner">
       <h3 id="helpFormatTitle"></h3>
       <p id="helpFormatText"></p>
-
       <h3 id="helpHowToTitle"></h3>
       <ol>
         <li id="helpStep1"></li>
         <li id="helpStep2"></li>
         <li id="helpStep3"></li>
       </ol>
-
       <div class="tip" id="helpTip1"></div>
       <div class="tip" id="helpTip2"></div>
     </div>
@@ -751,14 +742,17 @@ const METERS_PER_UNIT = 100;
 const EXAMPLE = 'x100.34, y59.44';
 const HISTORY_LIMIT = 10;
 
-// ============ Переводы ============
+const COMPASS = {
+  ru: ['С', 'СВ', 'В', 'ЮВ', 'Ю', 'ЮЗ', 'З', 'СЗ'],
+  en: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+};
+
 const T = {
   ru: {
     title: '🎯 Калькулятор миномёта',
     docTitle: 'Калькулятор миномёта',
     helpBtnTitle: 'Как пользоваться?',
     histBtnTitle: 'История расчётов',
-    themeBtnTitle: 'Сменить тему',
     themeBtnDark: 'Включить тёмную тему',
     themeBtnLight: 'Включить светлую тему',
     langBtnTitle: 'Switch to English',
@@ -769,30 +763,27 @@ const T = {
     fieldBHint: 'куда',
     calcBtn: 'Рассчитать',
     clearBtn: 'Очистить',
-    resultLabel: 'Дистанция',
-    unit: 'м',
-    // ошибки
+    labelDistance: 'Дистанция',
+    labelAzimuth: 'Азимут',
+    unitMeters: 'м',
     errNoA: '• Не введена позиция игрока',
     errNoB: '• Не введена позиция врага',
     errBadA: '• A — неверный формат, пример:',
     errBadB: '• B — неверный формат, пример:',
     warnSame: '⚠ A и B совпадают',
     warnSameSub: 'Это одна и та же точка — дистанция 0 м',
-    // история
     histTitle: 'История',
     histClear: 'Очистить',
     histEmpty: 'Пока пусто — посчитай что-нибудь',
-    // тосты
     toastBothPasted: 'Обе точки вставлены',
     toastRestored: 'Координаты восстановлены',
     toastHistCleared: 'История очищена',
-    // подсказка
     helpFormatTitle: 'Формат ввода',
     helpFormatText: 'Введи координаты в формате <code>x104.44, y63.52</code> — как показывается в игре.',
     helpHowToTitle: 'Как считать',
     helpStep1: '<b>Поле A</b> — координаты, где стоишь ты (твоя позиция).',
     helpStep2: '<b>Поле B</b> — координаты врага (куда стрелять).',
-    helpStep3: 'Результат в <b>метрах</b> появится сам, как только введёшь обе точки.',
+    helpStep3: 'Результат в <b>метрах</b> и <b>азимут</b> в градусах появятся сами.',
     helpTip1: '<b>Совет:</b> можно вставить сразу обе точки одной строкой (<code>x104.44, y63.52 x100.35, y58.98</code>) в любое поле — калькулятор сам разобьёт их на A и B.',
     helpTip2: '<b>Ctrl+A</b> — быстро выделить координаты, как только они появятся в игровом чате.',
   },
@@ -801,7 +792,6 @@ const T = {
     docTitle: 'Mortar Calculator',
     helpBtnTitle: 'How to use?',
     histBtnTitle: 'Calculation history',
-    themeBtnTitle: 'Change theme',
     themeBtnDark: 'Switch to dark theme',
     themeBtnLight: 'Switch to light theme',
     langBtnTitle: 'Переключить на русский',
@@ -812,8 +802,9 @@ const T = {
     fieldBHint: 'to',
     calcBtn: 'Calculate',
     clearBtn: 'Clear',
-    resultLabel: 'Distance',
-    unit: 'm',
+    labelDistance: 'Distance',
+    labelAzimuth: 'Azimuth',
+    unitMeters: 'm',
     errNoA: '• Player position not entered',
     errNoB: '• Enemy position not entered',
     errBadA: '• A — invalid format, example:',
@@ -831,7 +822,7 @@ const T = {
     helpHowToTitle: 'How to calculate',
     helpStep1: '<b>Field A</b> — coordinates of your position.',
     helpStep2: '<b>Field B</b> — enemy coordinates (target).',
-    helpStep3: 'The result in <b>meters</b> appears automatically once both points are entered.',
+    helpStep3: 'The result in <b>meters</b> and <b>azimuth</b> in degrees appears automatically.',
     helpTip1: '<b>Tip:</b> you can paste both points in one line (<code>x104.44, y63.52 x100.35, y58.98</code>) into either field — the calculator will split them into A and B.',
     helpTip2: '<b>Ctrl+A</b> — quickly select coordinates as soon as they appear in the game chat.',
   }
@@ -840,7 +831,6 @@ const T = {
 let LANG = 'ru';
 function t(key) { return T[LANG][key] || key; }
 
-// ============ Утилиты ============
 const $ = (id) => document.getElementById(id);
 const inputA = $('a');
 const inputB = $('b');
@@ -850,6 +840,21 @@ const helpToggle = $('helpToggle');
 const historyPanel = $('historyPanel');
 const histToggle = $('histToggle');
 const histList = $('histList');
+
+// ============ Азимут ============
+function computeAzimuth(A, B) {
+  const dx = B.x - A.x;
+  const dy = B.y - A.y;
+  let angle = Math.atan2(dx, dy) * 180 / Math.PI;
+  if (angle < 0) angle += 360;
+  return angle;
+}
+
+function compassDirection(azimuth) {
+  const dirs = COMPASS[LANG];
+  const idx = Math.round(azimuth / 45) % 8;
+  return dirs[idx];
+}
 
 // ============ Тема ============
 function applyTheme(theme) {
@@ -877,7 +882,6 @@ function applyLang() {
   document.title = t('docTitle');
 
   $('mainTitle').textContent = t('title');
-
   helpToggle.title = t('helpBtnTitle');
   histToggle.title = t('histBtnTitle');
   $('langToggle').title = t('langBtnTitle');
@@ -890,12 +894,13 @@ function applyLang() {
 
   $('calcBtnText').textContent = t('calcBtn');
   $('clearBtnText').textContent = t('clearBtn');
-  $('resultLabel').textContent = t('resultLabel');
+
+  $('labelDistance').textContent = t('labelDistance');
+  $('labelAzimuth').textContent = t('labelAzimuth');
 
   $('histTitle').textContent = t('histTitle');
   $('histClear').textContent = t('histClear');
 
-  // Помощь
   $('helpFormatTitle').textContent = t('helpFormatTitle');
   $('helpFormatText').innerHTML = t('helpFormatText');
   $('helpHowToTitle').textContent = t('helpHowToTitle');
@@ -905,10 +910,8 @@ function applyLang() {
   $('helpTip1').innerHTML = t('helpTip1');
   $('helpTip2').innerHTML = t('helpTip2');
 
-  // Тема (обновить tooltip в нужном языке)
   applyTheme(document.body.classList.contains('light') ? 'light' : 'dark');
 
-  // Пересчитать результат и историю, если есть что показать
   calculate();
   renderHistory();
 }
@@ -977,6 +980,32 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { setHelp(false); setHistory(false); }
 });
 
+// ============ Показ формулы (секрет: клик по метке) ============
+let stepsVisible = false;
+(function initSteps() {
+  let saved = '0';
+  try { saved = localStorage.getItem('mortar-steps-visible') || '0'; } catch (e) {}
+  stepsVisible = saved === '1';
+  updateStepsVisibility();
+})();
+
+function updateStepsVisibility() {
+  const stepsEl = $('steps');
+  if (!stepsEl) return;
+  if (stepsVisible) stepsEl.classList.add('show');
+  else stepsEl.classList.remove('show');
+}
+
+function toggleSteps() {
+  stepsVisible = !stepsVisible;
+  updateStepsVisibility();
+  try { localStorage.setItem('mortar-steps-visible', stepsVisible ? '1' : '0'); } catch (e) {}
+}
+
+// Привязываем клик на обе метки
+$('labelDistance').addEventListener('click', toggleSteps);
+$('labelAzimuth').addEventListener('click', toggleSteps);
+
 // ============ История ============
 function loadHistory() {
   try {
@@ -1006,24 +1035,30 @@ function renderHistory() {
     return;
   }
 
-  histList.innerHTML = history.map((item, idx) => `
-    <div class="hist-item" data-idx="${idx}">
-      <div class="hist-row">
-        <div class="hist-meters">${item.meters.toFixed(0)}<span class="unit">${t('unit')}</span></div>
-        <div class="hist-time">${formatTime(item.time)}</div>
+  histList.innerHTML = history.map((item, idx) => {
+    const az = (item.azimuth !== undefined)
+      ? `<span class="az">· ${Math.round(item.azimuth)}°</span>`
+      : '';
+    return `
+      <div class="hist-item" data-idx="${idx}">
+        <div class="hist-row">
+          <div class="hist-meters">${item.meters.toFixed(0)}<span class="unit">${t('unitMeters')}</span>${az}</div>
+          <div class="hist-time">${formatTime(item.time)}</div>
+        </div>
+        <div class="hist-coords">
+          x${item.ax}, y${item.ay}<span class="sep">→</span>x${item.bx}, y${item.by}
+        </div>
       </div>
-      <div class="hist-coords">
-        x${item.ax}, y${item.ay}<span class="sep">→</span>x${item.bx}, y${item.by}
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
-function pushHistory(ax, ay, bx, by, meters) {
+function pushHistory(ax, ay, bx, by, meters, azimuth) {
   if (history.length) {
     const last = history[0];
     if (last.ax === ax && last.ay === ay && last.bx === bx && last.by === by) {
       last.meters = meters;
+      last.azimuth = azimuth;
       last.time = Date.now();
       saveHistory(history);
       renderHistory();
@@ -1031,7 +1066,7 @@ function pushHistory(ax, ay, bx, by, meters) {
     }
   }
 
-  history.unshift({ ax, ay, bx, by, meters, time: Date.now() });
+  history.unshift({ ax, ay, bx, by, meters, azimuth, time: Date.now() });
   if (history.length > HISTORY_LIMIT) history = history.slice(0, HISTORY_LIMIT);
 
   saveHistory(history);
@@ -1095,31 +1130,38 @@ function showToast(msg) {
 }
 
 function showError(html) {
-  const resultBox = $('result');
-  const valueEl = $('value');
+  $('dual').style.display = 'none';
+  const eb = $('errorBox');
+  eb.style.display = 'block';
+  eb.className = 'error-box error';
+  eb.innerHTML = html;
   $('steps').textContent = '';
-  valueEl.classList.remove('warning');
-  valueEl.classList.add('error');
-  valueEl.innerHTML = html;
-  resultBox.classList.add('show');
+  updateStepsVisibility();
+  $('result').classList.add('show');
 }
 
 function showWarning(html) {
-  const resultBox = $('result');
-  const valueEl = $('value');
+  $('dual').style.display = 'none';
+  const eb = $('errorBox');
+  eb.style.display = 'block';
+  eb.className = 'error-box warning';
+  eb.innerHTML = html;
   $('steps').textContent = '';
-  valueEl.classList.remove('error');
-  valueEl.classList.add('warning');
-  valueEl.innerHTML = html;
-  resultBox.classList.add('show');
+  updateStepsVisibility();
+  $('result').classList.add('show');
 }
 
 function clearResult() {
   $('result').classList.remove('show');
-  $('value').classList.remove('error');
-  $('value').classList.remove('warning');
-  $('value').innerHTML = '';
+  $('dual').style.display = 'flex';
+  const eb = $('errorBox');
+  eb.style.display = 'none';
+  eb.innerHTML = '';
+  eb.className = 'error-box';
+  $('valueMeters').innerHTML = '';
+  $('valueAzimuth').innerHTML = '';
   $('steps').textContent = '';
+  updateStepsVisibility();
 }
 
 function errorLine(kind, raw, parsed) {
@@ -1152,8 +1194,7 @@ function calculate() {
 
   if (A.x === B.x && A.y === B.y) {
     return showWarning(
-      t('warnSame') +
-      `<span class="sub">${t('warnSameSub')}</span>`
+      t('warnSame') + `<span class="sub">${t('warnSameSub')}</span>`
     );
   }
 
@@ -1165,23 +1206,35 @@ function calculate() {
   const distanceUnits = Math.sqrt(sum);
   const meters = distanceUnits * METERS_PER_UNIT;
 
-  $('value').classList.remove('error');
-  $('value').classList.remove('warning');
-  $('value').innerHTML = `${meters.toFixed(0)}<span class="unit">${t('unit')}</span>`;
+  const azimuth = computeAzimuth(A, B);
+  const compass = compassDirection(azimuth);
+  const azimuthInt = Math.round(azimuth);
+
+  $('dual').style.display = 'flex';
+  const eb = $('errorBox');
+  eb.style.display = 'none';
+  eb.className = 'error-box';
+  eb.innerHTML = '';
+
+  $('valueMeters').innerHTML = `${meters.toFixed(0)}<span class="unit">${t('unitMeters')}</span>`;
+  $('valueAzimuth').innerHTML = `${azimuthInt}<span class="unit">°</span>`;
 
   $('steps').textContent =
     `A = x${A.x}, y${A.y}\n` +
     `B = x${B.x}, y${B.y}\n\n` +
+    `${t('labelDistance')}:\n` +
     `dx = ${A.x} − ${B.x} = ${dx.toFixed(2)}\n` +
-    `dx² = ${dx2.toFixed(4)}\n` +
     `dy = ${A.y} − ${B.y} = ${dy.toFixed(2)}\n` +
-    `dy² = ${dy2.toFixed(4)}\n\n` +
-    `√(${dx2.toFixed(4)} + ${dy2.toFixed(4)}) = ${distanceUnits.toFixed(4)}\n` +
-    `${distanceUnits.toFixed(4)} × ${METERS_PER_UNIT} = ${meters.toFixed(2)} ${t('unit')}`;
+    `√(${dx.toFixed(2)}² + ${dy.toFixed(2)}²) = ${distanceUnits.toFixed(4)}\n` +
+    `${distanceUnits.toFixed(4)} × ${METERS_PER_UNIT} = ${meters.toFixed(2)} ${t('unitMeters')}\n\n` +
+    `${t('labelAzimuth')}:\n` +
+    `atan2(${dx.toFixed(2)}, ${dy.toFixed(2)}) = ${azimuth.toFixed(4)}° · ${compass}`;
+
+  updateStepsVisibility();
 
   $('result').classList.add('show');
 
-  pushHistory(A.x, A.y, B.x, B.y, meters);
+  pushHistory(A.x, A.y, B.x, B.y, meters, azimuth);
 }
 
 let autoTimer = null;
@@ -1219,16 +1272,11 @@ histToggle.addEventListener('click', toggleHistory);
 
 inputA.addEventListener('input', scheduleCalc);
 inputB.addEventListener('input', scheduleCalc);
-
 inputA.addEventListener('paste', handlePasteSplit);
 inputB.addEventListener('paste', handlePasteSplit);
 
-inputA.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') calculate();
-});
-inputB.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') calculate();
-});
+inputA.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+inputB.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
 
 $('calcBtn').addEventListener('click', calculate);
 $('clearBtn').addEventListener('click', clearAll);
