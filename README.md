@@ -1,34 +1,33 @@
-
 # Mortar Calculator
 
-Простой онлайн-калькулятор для расчёта дистанции и азимута между двумя точками по координатам из игры. Создан в первую очередь под **Wardogs**, но подойдёт для любой игры с системой координат формата `x123.45, y67.89`.
+A simple online calculator for computing distance and azimuth between two points using in-game coordinates. Built primarily for **Wardogs**, but works with any game that uses coordinate format like `x123.45, y67.89`.
 
-## 🔗 Открыть калькулятор
+## 🔗 Open the calculator
 
 **→ [scrymen.github.io/mortar-calculator](https://scrymen.github.io/mortar-calculator/)**
 
-Работает в любом браузере: на ПК, телефоне, планшете. Ничего устанавливать не нужно.
+Works in any browser: desktop, mobile, tablet. No installation needed.
 
-## ✨ Возможности
+## ✨ Features
 
-- **Расчёт дистанции** между двумя точками (в метрах)
-- **Расчёт азимута** (угол направления в градусах)
-- **Вставка обеих точек одной строкой** - калькулятор сам разобьёт их на A и B
-- **История последних 10 расчётов** - можно вернуться к предыдущему
-- **Тёмная и светлая темы**
-- **Русский и английский языки**
-- **Автоподсчёт** при вводе + кнопка «Рассчитать»(на всякий случай)
-- **Работает офлайн** - можно сохранить страницу и пользоваться без интернета
+- **Distance calculation** between two points (in meters)
+- **Azimuth calculation** (heading angle in degrees)
+- **Paste both points in a single line** — the calculator will split them into A and B automatically
+- **History of the last 10 calculations** — jump back to a previous result anytime
+- **Dark and light themes**
+- **Russian and English languages**
+- **Live auto-calc** while typing + a "Calculate" button (just in case)
+- **Works offline** — save the page and use it without internet
 
-## 📖 Как пользоваться
+## 📖 How to use
 
-1. Открой калькулятор по ссылке выше
-2. Введи координаты своей позиции в поле **A** (например, `x104.44, y63.52`)
-3. Введи координаты цели в поле **B**
-4. Результат появится автоматически — дистанция в метрах и азимут в градусах
+1. Open the calculator using the link above
+2. Enter your own position into field **A** (e.g. `x104.44, y63.52`)
+3. Enter the target position into field **B**
+4. The result appears automatically — distance in meters and azimuth in degrees
 
-**Совет:** можно вставить сразу обе точки одной строкой (`x104.44, y63.52 x100.35, y58.98`) в любое поле — калькулятор сам определит, где A, а где B.
+**Tip:** you can paste both points in a single line (`x104.44, y63.52 x100.35, y58.98`) into either field — the calculator will figure out which one is A and which one is B.
 
-## ⚠️ Важно
+## ⚠️ Important
 
-Для **передвижной артиллерии** расчёт не учитывает рельеф. Из-за разницы высот между позицией игрока и целью возможны отклонения — корректируй после первого выстрела.
+For **mobile artillery**, the calculation does not take terrain into account. Elevation differences between the player's position and the target can cause deviations — adjust your fire after the first shot.
