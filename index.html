@@ -118,7 +118,7 @@
   h1 {
     flex: 1;
     margin: 0;
-    font-size: 20px;
+    font-size: 19px;
     text-align: center;
     letter-spacing: 0.3px;
     color: var(--title-color);
@@ -130,8 +130,8 @@
 
   .icon-btn {
     flex-shrink: 0;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,9 +150,14 @@
   .icon-btn:hover { background: var(--toggle-hover); }
   .icon-btn:active { transform: scale(0.92); }
 
-  .theme-toggle { font-size: 17px; }
-  .help-btn { font-weight: 700; font-size: 15px; }
-  .hist-btn { font-size: 16px; }
+  .theme-toggle { font-size: 16px; }
+  .help-btn { font-weight: 700; font-size: 14px; }
+  .hist-btn { font-size: 15px; }
+  .lang-btn {
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+  }
 
   .help-btn:hover,
   .help-btn.active {
@@ -162,6 +167,11 @@
 
   .hist-btn:hover,
   .hist-btn.active {
+    color: var(--help-accent);
+    border-color: var(--help-accent);
+  }
+
+  .lang-btn:hover {
     color: var(--help-accent);
     border-color: var(--help-accent);
   }
@@ -305,6 +315,7 @@
     padding: 4px 8px;
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s, background 0.15s;
+    font-family: inherit;
   }
 
   .hist-clear:hover {
@@ -651,7 +662,7 @@
 
     .hist-list { max-height: 60vh; }
 
-    h1 { font-size: 18px; }
+    h1 { font-size: 17px; }
   }
 </style>
 </head>
@@ -661,17 +672,18 @@
 
   <div class="card">
     <div class="card-head">
-      <button class="icon-btn help-btn" id="helpToggle" title="Как пользоваться?">?</button>
-      <h1>🎯 Калькулятор миномёта</h1>
-      <button class="icon-btn hist-btn" id="histToggle" title="История расчётов">🕘</button>
-      <button class="icon-btn theme-toggle" id="themeToggle" title="Сменить тему">🌙</button>
+      <button class="icon-btn help-btn" id="helpToggle">?</button>
+      <h1 id="mainTitle">🎯 Калькулятор миномёта</h1>
+      <button class="icon-btn hist-btn" id="histToggle">🕘</button>
+      <button class="icon-btn lang-btn" id="langToggle">EN</button>
+      <button class="icon-btn theme-toggle" id="themeToggle">🌙</button>
     </div>
 
     <div class="field player">
       <div class="field-head">
         <div class="dot"></div>
-        <div class="field-title">A — моя позиция (игрок)</div>
-        <div class="field-hint">откуда</div>
+        <div class="field-title" id="fieldATitle">A — моя позиция (игрок)</div>
+        <div class="field-hint" id="fieldAHint">откуда</div>
       </div>
       <input id="a" type="text" placeholder="x104.44, y63.52" autocomplete="off" spellcheck="false">
     </div>
@@ -679,23 +691,23 @@
     <div class="field enemy">
       <div class="field-head">
         <div class="dot"></div>
-        <div class="field-title">B — позиция врага</div>
-        <div class="field-hint">куда</div>
+        <div class="field-title" id="fieldBTitle">B — позиция врага</div>
+        <div class="field-hint" id="fieldBHint">куда</div>
       </div>
       <input id="b" type="text" placeholder="x100.35, y58.98" autocomplete="off" spellcheck="false">
     </div>
 
     <div class="btn-row">
-      <button class="btn primary" id="calcBtn" title="Рассчитать расстояние">
-        <span class="icon">🎯</span> Рассчитать
+      <button class="btn primary" id="calcBtn">
+        <span class="icon">🎯</span> <span id="calcBtnText">Рассчитать</span>
       </button>
-      <button class="btn" id="clearBtn" title="Очистить поля">
-        <span class="icon">🗑</span> Очистить
+      <button class="btn" id="clearBtn">
+        <span class="icon">🗑</span> <span id="clearBtnText">Очистить</span>
       </button>
     </div>
 
     <div class="result" id="result">
-      <div class="label">Дистанция</div>
+      <div class="label" id="resultLabel">Дистанция</div>
       <div class="value" id="value">0<span class="unit">м</span></div>
       <div class="steps" id="steps"></div>
     </div>
@@ -703,31 +715,25 @@
 
   <aside class="help-panel" id="helpPanel">
     <div class="help-inner">
-      <h3>Формат ввода</h3>
-      <p>Введи координаты в формате <code>x104.44, y63.52</code> — как показывается в игре.</p>
+      <h3 id="helpFormatTitle"></h3>
+      <p id="helpFormatText"></p>
 
-      <h3>Как считать</h3>
+      <h3 id="helpHowToTitle"></h3>
       <ol>
-        <li><b>Поле A</b> — координаты, где стоишь ты (твоя позиция).</li>
-        <li><b>Поле B</b> — координаты врага (куда стрелять).</li>
-        <li>Результат в <b>метрах</b> появится сам, как только введёшь обе точки.</li>
+        <li id="helpStep1"></li>
+        <li id="helpStep2"></li>
+        <li id="helpStep3"></li>
       </ol>
 
-      <div class="tip">
-        <b>Совет:</b> можно вставить сразу обе точки одной строкой
-        (<code>x104.44, y63.52 x100.35, y58.98</code>) в любое поле — калькулятор сам разобьёт их на A и B.
-      </div>
-
-      <div class="tip">
-        <b>Ctrl+A</b> — быстро выделить координаты, как только они появятся в игровом чате.
-      </div>
+      <div class="tip" id="helpTip1"></div>
+      <div class="tip" id="helpTip2"></div>
     </div>
   </aside>
 
   <aside class="history-panel" id="historyPanel">
     <div class="hist-inner">
       <div class="hist-head">
-        <div class="hist-title">История</div>
+        <div class="hist-title" id="histTitle">История</div>
         <button class="hist-clear" id="histClear">Очистить</button>
       </div>
       <div class="hist-list" id="histList">
@@ -745,6 +751,96 @@ const METERS_PER_UNIT = 100;
 const EXAMPLE = 'x100.34, y59.44';
 const HISTORY_LIMIT = 10;
 
+// ============ Переводы ============
+const T = {
+  ru: {
+    title: '🎯 Калькулятор миномёта',
+    docTitle: 'Калькулятор миномёта',
+    helpBtnTitle: 'Как пользоваться?',
+    histBtnTitle: 'История расчётов',
+    themeBtnTitle: 'Сменить тему',
+    themeBtnDark: 'Включить тёмную тему',
+    themeBtnLight: 'Включить светлую тему',
+    langBtnTitle: 'Switch to English',
+    langBtnLabel: 'EN',
+    fieldATitle: 'A — моя позиция (игрок)',
+    fieldAHint: 'откуда',
+    fieldBTitle: 'B — позиция врага',
+    fieldBHint: 'куда',
+    calcBtn: 'Рассчитать',
+    clearBtn: 'Очистить',
+    resultLabel: 'Дистанция',
+    unit: 'м',
+    // ошибки
+    errNoA: '• Не введена позиция игрока',
+    errNoB: '• Не введена позиция врага',
+    errBadA: '• A — неверный формат, пример:',
+    errBadB: '• B — неверный формат, пример:',
+    warnSame: '⚠ A и B совпадают',
+    warnSameSub: 'Это одна и та же точка — дистанция 0 м',
+    // история
+    histTitle: 'История',
+    histClear: 'Очистить',
+    histEmpty: 'Пока пусто — посчитай что-нибудь',
+    // тосты
+    toastBothPasted: 'Обе точки вставлены',
+    toastRestored: 'Координаты восстановлены',
+    toastHistCleared: 'История очищена',
+    // подсказка
+    helpFormatTitle: 'Формат ввода',
+    helpFormatText: 'Введи координаты в формате <code>x104.44, y63.52</code> — как показывается в игре.',
+    helpHowToTitle: 'Как считать',
+    helpStep1: '<b>Поле A</b> — координаты, где стоишь ты (твоя позиция).',
+    helpStep2: '<b>Поле B</b> — координаты врага (куда стрелять).',
+    helpStep3: 'Результат в <b>метрах</b> появится сам, как только введёшь обе точки.',
+    helpTip1: '<b>Совет:</b> можно вставить сразу обе точки одной строкой (<code>x104.44, y63.52 x100.35, y58.98</code>) в любое поле — калькулятор сам разобьёт их на A и B.',
+    helpTip2: '<b>Ctrl+A</b> — быстро выделить координаты, как только они появятся в игровом чате.',
+  },
+  en: {
+    title: '🎯 Mortar Calculator',
+    docTitle: 'Mortar Calculator',
+    helpBtnTitle: 'How to use?',
+    histBtnTitle: 'Calculation history',
+    themeBtnTitle: 'Change theme',
+    themeBtnDark: 'Switch to dark theme',
+    themeBtnLight: 'Switch to light theme',
+    langBtnTitle: 'Переключить на русский',
+    langBtnLabel: 'RU',
+    fieldATitle: 'A — my position (player)',
+    fieldAHint: 'from',
+    fieldBTitle: 'B — enemy position',
+    fieldBHint: 'to',
+    calcBtn: 'Calculate',
+    clearBtn: 'Clear',
+    resultLabel: 'Distance',
+    unit: 'm',
+    errNoA: '• Player position not entered',
+    errNoB: '• Enemy position not entered',
+    errBadA: '• A — invalid format, example:',
+    errBadB: '• B — invalid format, example:',
+    warnSame: '⚠ A and B are the same',
+    warnSameSub: 'Same point — distance 0 m',
+    histTitle: 'History',
+    histClear: 'Clear',
+    histEmpty: 'Empty — calculate something',
+    toastBothPasted: 'Both points pasted',
+    toastRestored: 'Coordinates restored',
+    toastHistCleared: 'History cleared',
+    helpFormatTitle: 'Input format',
+    helpFormatText: 'Enter coordinates in format <code>x104.44, y63.52</code> — as shown in the game.',
+    helpHowToTitle: 'How to calculate',
+    helpStep1: '<b>Field A</b> — coordinates of your position.',
+    helpStep2: '<b>Field B</b> — enemy coordinates (target).',
+    helpStep3: 'The result in <b>meters</b> appears automatically once both points are entered.',
+    helpTip1: '<b>Tip:</b> you can paste both points in one line (<code>x104.44, y63.52 x100.35, y58.98</code>) into either field — the calculator will split them into A and B.',
+    helpTip2: '<b>Ctrl+A</b> — quickly select coordinates as soon as they appear in the game chat.',
+  }
+};
+
+let LANG = 'ru';
+function t(key) { return T[LANG][key] || key; }
+
+// ============ Утилиты ============
 const $ = (id) => document.getElementById(id);
 const inputA = $('a');
 const inputB = $('b');
@@ -760,11 +856,11 @@ function applyTheme(theme) {
   if (theme === 'light') {
     document.body.classList.add('light');
     $('themeToggle').textContent = '☀️';
-    $('themeToggle').title = 'Включить тёмную тему';
+    $('themeToggle').title = t('themeBtnDark');
   } else {
     document.body.classList.remove('light');
     $('themeToggle').textContent = '🌙';
-    $('themeToggle').title = 'Включить светлую тему';
+    $('themeToggle').title = t('themeBtnLight');
   }
 }
 
@@ -775,10 +871,59 @@ function toggleTheme() {
   try { localStorage.setItem('mortar-theme', next); } catch (e) {}
 }
 
-(function initTheme() {
-  let saved = 'dark';
-  try { saved = localStorage.getItem('mortar-theme') || 'dark'; } catch (e) {}
-  applyTheme(saved);
+// ============ Язык ============
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.title = t('docTitle');
+
+  $('mainTitle').textContent = t('title');
+
+  helpToggle.title = t('helpBtnTitle');
+  histToggle.title = t('histBtnTitle');
+  $('langToggle').title = t('langBtnTitle');
+  $('langToggle').textContent = t('langBtnLabel');
+
+  $('fieldATitle').textContent = t('fieldATitle');
+  $('fieldAHint').textContent = t('fieldAHint');
+  $('fieldBTitle').textContent = t('fieldBTitle');
+  $('fieldBHint').textContent = t('fieldBHint');
+
+  $('calcBtnText').textContent = t('calcBtn');
+  $('clearBtnText').textContent = t('clearBtn');
+  $('resultLabel').textContent = t('resultLabel');
+
+  $('histTitle').textContent = t('histTitle');
+  $('histClear').textContent = t('histClear');
+
+  // Помощь
+  $('helpFormatTitle').textContent = t('helpFormatTitle');
+  $('helpFormatText').innerHTML = t('helpFormatText');
+  $('helpHowToTitle').textContent = t('helpHowToTitle');
+  $('helpStep1').innerHTML = t('helpStep1');
+  $('helpStep2').innerHTML = t('helpStep2');
+  $('helpStep3').innerHTML = t('helpStep3');
+  $('helpTip1').innerHTML = t('helpTip1');
+  $('helpTip2').innerHTML = t('helpTip2');
+
+  // Тема (обновить tooltip в нужном языке)
+  applyTheme(document.body.classList.contains('light') ? 'light' : 'dark');
+
+  // Пересчитать результат и историю, если есть что показать
+  calculate();
+  renderHistory();
+}
+
+function toggleLang() {
+  LANG = LANG === 'ru' ? 'en' : 'ru';
+  try { localStorage.setItem('mortar-lang', LANG); } catch (e) {}
+  applyLang();
+  showToast(LANG === 'ru' ? 'Язык: русский' : 'Language: English');
+}
+
+(function initLang() {
+  let saved = 'ru';
+  try { saved = localStorage.getItem('mortar-lang') || 'ru'; } catch (e) {}
+  LANG = saved === 'en' ? 'en' : 'ru';
 })();
 
 // ============ Панели ============
@@ -809,21 +954,6 @@ function toggleHistory(e) {
   if (open && window.matchMedia('(max-width: 1280px)').matches) setHelp(false);
   setHistory(open);
 }
-
-(function initPanels() {
-  let savedHelp = 'closed';
-  let savedHist = 'closed';
-  try { savedHelp = localStorage.getItem('mortar-help') || 'closed'; } catch (e) {}
-  try { savedHist = localStorage.getItem('mortar-history') || 'closed'; } catch (e) {}
-
-  if (window.matchMedia('(max-width: 1280px)').matches) {
-    if (savedHelp === 'open') { setHelp(true); setHistory(false); }
-    else if (savedHist === 'open') { setHistory(true); setHelp(false); }
-  } else {
-    if (savedHelp === 'open') setHelp(true);
-    if (savedHist === 'open') setHistory(true);
-  }
-})();
 
 document.addEventListener('click', (e) => {
   const isNarrow = window.matchMedia('(max-width: 1280px)').matches;
@@ -872,14 +1002,14 @@ function formatTime(ts) {
 
 function renderHistory() {
   if (!history.length) {
-    histList.innerHTML = '<div class="hist-empty">Пока пусто — посчитай что-нибудь</div>';
+    histList.innerHTML = `<div class="hist-empty">${t('histEmpty')}</div>`;
     return;
   }
 
   histList.innerHTML = history.map((item, idx) => `
     <div class="hist-item" data-idx="${idx}">
       <div class="hist-row">
-        <div class="hist-meters">${item.meters.toFixed(0)}<span class="unit">м</span></div>
+        <div class="hist-meters">${item.meters.toFixed(0)}<span class="unit">${t('unit')}</span></div>
         <div class="hist-time">${formatTime(item.time)}</div>
       </div>
       <div class="hist-coords">
@@ -918,14 +1048,14 @@ histList.addEventListener('click', (e) => {
   inputA.value = `x${item.ax}, y${item.ay}`;
   inputB.value = `x${item.bx}, y${item.by}`;
   calculate();
-  showToast('Координаты восстановлены');
+  showToast(t('toastRestored'));
 });
 
 $('histClear').addEventListener('click', () => {
   history = [];
   saveHistory(history);
   renderHistory();
-  showToast('История очищена');
+  showToast(t('toastHistCleared'));
 });
 
 // ============ Парсинг ============
@@ -957,11 +1087,11 @@ function parseAllCoords(str) {
 
 // ============ UI helpers ============
 function showToast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 1600);
+  const tEl = $('toast');
+  tEl.textContent = msg;
+  tEl.classList.add('show');
+  clearTimeout(tEl._timer);
+  tEl._timer = setTimeout(() => tEl.classList.remove('show'), 1600);
 }
 
 function showError(html) {
@@ -992,9 +1122,12 @@ function clearResult() {
   $('steps').textContent = '';
 }
 
-function errorLine(kind, label, raw, parsed) {
-  if (!raw) return `• Не введена ${label}`;
-  if (!parsed) return `• ${kind} — неверный формат, пример: <span class="example">${EXAMPLE}</span>`;
+function errorLine(kind, raw, parsed) {
+  if (!raw) return kind === 'A' ? t('errNoA') : t('errNoB');
+  if (!parsed) {
+    const prefix = kind === 'A' ? t('errBadA') : t('errBadB');
+    return `${prefix} <span class="example">${EXAMPLE}</span>`;
+  }
   return null;
 }
 
@@ -1007,8 +1140,8 @@ function calculate() {
 
   if (!rawA && !rawB) { clearResult(); return; }
 
-  const errA = errorLine('A', 'позиция игрока', rawA, A);
-  const errB = errorLine('B', 'позиция врага', rawB, B);
+  const errA = errorLine('A', rawA, A);
+  const errB = errorLine('B', rawB, B);
 
   if (errA || errB) {
     const lines = [];
@@ -1019,8 +1152,8 @@ function calculate() {
 
   if (A.x === B.x && A.y === B.y) {
     return showWarning(
-      '⚠ A и B совпадают' +
-      '<span class="sub">Это одна и та же точка — дистанция 0 м</span>'
+      t('warnSame') +
+      `<span class="sub">${t('warnSameSub')}</span>`
     );
   }
 
@@ -1034,7 +1167,7 @@ function calculate() {
 
   $('value').classList.remove('error');
   $('value').classList.remove('warning');
-  $('value').innerHTML = `${meters.toFixed(0)}<span class="unit">м</span>`;
+  $('value').innerHTML = `${meters.toFixed(0)}<span class="unit">${t('unit')}</span>`;
 
   $('steps').textContent =
     `A = x${A.x}, y${A.y}\n` +
@@ -1043,8 +1176,8 @@ function calculate() {
     `dx² = ${dx2.toFixed(4)}\n` +
     `dy = ${A.y} − ${B.y} = ${dy.toFixed(2)}\n` +
     `dy² = ${dy2.toFixed(4)}\n\n` +
-    `√(${dx2.toFixed(4)} + ${dy2.toFixed(4)}) = ${distanceUnits.toFixed(4)} ед.\n` +
-    `${distanceUnits.toFixed(4)} × ${METERS_PER_UNIT} = ${meters.toFixed(2)} м`;
+    `√(${dx2.toFixed(4)} + ${dy2.toFixed(4)}) = ${distanceUnits.toFixed(4)}\n` +
+    `${distanceUnits.toFixed(4)} × ${METERS_PER_UNIT} = ${meters.toFixed(2)} ${t('unit')}`;
 
   $('result').classList.add('show');
 
@@ -1067,7 +1200,7 @@ function handlePasteSplit(e) {
     inputA.value = `x${coords[0].x}, y${coords[0].y}`;
     inputB.value = `x${coords[1].x}, y${coords[1].y}`;
     calculate();
-    showToast('Обе точки вставлены');
+    showToast(t('toastBothPasted'));
   }
 }
 
@@ -1080,6 +1213,7 @@ function clearAll() {
 
 // ============ События ============
 $('themeToggle').addEventListener('click', toggleTheme);
+$('langToggle').addEventListener('click', toggleLang);
 helpToggle.addEventListener('click', toggleHelp);
 histToggle.addEventListener('click', toggleHistory);
 
@@ -1103,7 +1237,29 @@ document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); calculate(); }
 });
 
-renderHistory();
+// ============ Инициализация ============
+(function initTheme() {
+  let saved = 'dark';
+  try { saved = localStorage.getItem('mortar-theme') || 'dark'; } catch (e) {}
+  applyTheme(saved);
+})();
+
+(function initPanels() {
+  let savedHelp = 'closed';
+  let savedHist = 'closed';
+  try { savedHelp = localStorage.getItem('mortar-help') || 'closed'; } catch (e) {}
+  try { savedHist = localStorage.getItem('mortar-history') || 'closed'; } catch (e) {}
+
+  if (window.matchMedia('(max-width: 1280px)').matches) {
+    if (savedHelp === 'open') { setHelp(true); setHistory(false); }
+    else if (savedHist === 'open') { setHistory(true); setHelp(false); }
+  } else {
+    if (savedHelp === 'open') setHelp(true);
+    if (savedHist === 'open') setHistory(true);
+  }
+})();
+
+applyLang();
 </script>
 
 </body>
